@@ -75,6 +75,9 @@ class Chatbot:
         self.TEST_OUT_SUFFIX = '_predictions.txt'
         self.SENTENCES_PREFIX = ['Q: ', 'A: ']
 
+        self.ansBUFF = []
+        self.quesBUFF = []
+
     @staticmethod
     def parseArgs(args):
         """
@@ -326,7 +329,10 @@ class Chatbot:
             question = input(self.SENTENCES_PREFIX[0])
             if question == '' or question == 'exit':
                 break
-
+            
+            if len(self.ansBUFF):
+                self.quesBUFF.append(question)
+                
             questionSeq = []  # Will be contain the question as seen by the encoder
             answer = self.singlePredict(question, questionSeq)
             if not answer:
@@ -340,6 +346,10 @@ class Chatbot:
                 print(self.textData.sequence2str(answer))
 
             print()
+            
+            self.ansBUFF.append(answer)
+        self.textData.extractTestQA(self.quesBUFF, self.ansBUFF)
+        self.mainTrain(sess)
 
     def singlePredict(self, question, questionSeq=None):
         """ Predict the sentence

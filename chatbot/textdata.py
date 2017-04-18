@@ -300,7 +300,8 @@ class TextData:
             data = pickle.load(handle)  # Warning: If adding something here, also modifying saveDataset
             self.word2id = data['word2id']
             self.id2word = data['id2word']
-            self.idCount = data.get('idCount', None)
+            self.idCount = data['idCount']
+#self.idCount = data.get('idCount', None)
             self.trainingSamples = data['trainingSamples']
 
             self.padToken = self.word2id['<pad>']
@@ -437,6 +438,24 @@ class TextData:
             if inputWords and targetWords:  # Filter wrong samples (if one of the list is empty)
                 self.trainingSamples.append([inputWords, targetWords])
 
+    def extractTestQA(self, questions, answers):
+        """Extract the sample lines from the conversations
+        Args:
+            conversation (Obj): a conversation object containing the lines to extract
+        """
+
+        # Iterate over all the lines of the conversation
+        for i in tqdm_wrap(range(len(questions)),  # We ignore the last line (no answer for it)
+                           desc='Conversation', leave=False):
+            inputLine  = questions[i]
+            targetLine = answers[i]
+
+            inputWords  = self.extractText(inputLine)
+            targetWords = self.extractText(targetLine)
+
+            if inputWords and targetWords:  # Filter wrong samples (if one of the list is empty)
+                self.trainingSamples.append([inputWords, targetWords])
+    
     def extractText(self, line):
         """Extract the words from a sample lines
         Args:
