@@ -1,1 +1,9 @@
-save/model/*
+save/model*
+data/*
+
+chatbot/__pycache__/*.pyc
+chatbot/corpus/__pycache__/*.pyc
+chatbot/*.pyc
+
+*.sh
+*.pyc

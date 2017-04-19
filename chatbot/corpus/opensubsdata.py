@@ -42,6 +42,7 @@ class OpensubsData:
         Return:
             array(question, answer): the extracted QA pairs
         """
+        print(dirName)
         conversations = []
         dirList = self.filesInDir(dirName)
         for filepath in tqdm(dirList, "OpenSubtitles data files"):
@@ -50,6 +51,7 @@ class OpensubsData:
                     doc = self.getXML(filepath)
                     conversations.extend(self.genList(doc))
                 except ValueError:
+                    print(sys.exc_info())
                     tqdm.write("Skipping file %s with errors." % filepath)
                 except:
                     print("Unexpected error:", sys.exc_info()[0])

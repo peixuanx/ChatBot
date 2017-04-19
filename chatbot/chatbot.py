@@ -67,6 +67,7 @@ class Chatbot:
 
         # Filename and directories constants
         self.MODEL_DIR_BASE = 'save/model'
+        self.RESULT_DIR_BASE = 'save/result'
         self.MODEL_NAME_BASE = 'model'
         self.MODEL_EXT = '.ckpt'
         self.CONFIG_FILENAME = 'params.ini'
@@ -291,7 +292,9 @@ class Chatbot:
             self.saver.restore(sess, modelName)
             print('Testing...')
 
-            saveName = modelName[:-len(self.MODEL_EXT)] + self.TEST_OUT_SUFFIX  # We remove the model extension and add the prediction suffix
+            saveName = modelName[:-len(self.MODEL_EXT)].replace(self.MODEL_DIR_BASE, 
+                        self.RESULT_DIR_BASE) + self.TEST_OUT_SUFFIX  # We remove the model extension and add the prediction suffix
+            print(saveName)
             with open(saveName, 'w') as f:
                 nbIgnored = 0
                 for line in tqdm(lines, desc='Sentences'):
@@ -464,7 +467,7 @@ class Chatbot:
             sess: The current running session
         """
 
-        print('WARNING: ', end='')
+        #print('WARNING: ', end='')
 
         modelName = self._getModelName()
 
